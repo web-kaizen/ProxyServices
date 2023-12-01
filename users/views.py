@@ -23,7 +23,7 @@ class __BaseUserOperationView(APIView):
         if serializer.is_valid():
             route = self.route_class()
             route.set_parameters(params=serializer.validated_data)
-            route.send(endpoint=self.endpoint, method=request.method)
+            route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
             return Response(
                 data=route.get_response().json(),
                 status=route.get_response().status_code

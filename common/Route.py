@@ -22,10 +22,11 @@ class Route:
     def get_response(self) -> Response:
         return self._response
 
-    def send(self, endpoint: str, method: str) -> None:
+    def send(self, endpoint: str, method: str, **kwargs: dict) -> None:
         response = requests.request(
             method=method,
             url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}',
-            data=self._parameters
+            data=self._parameters,
+            **kwargs
         )
         self.set_response(response=response)

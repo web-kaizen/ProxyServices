@@ -1,0 +1,12 @@
+certifi==2023.11.17
+charset-normalizer==3.3.2
+idna==3.6
+requests==2.31.0
+urllib3==2.1.0
+overrides==7.4.0
+python_dotenv==1.0.0
+djangorestframework==3.14.0
+Django==4.2.7
+django-rest-swagger==2.2.0
+drf-yasg==1.21.7
+isort==5.12.0

@@ -1,5 +1,5 @@
 """
-URL configuration for main_proxy project.
+URL configuration for proxy project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -14,10 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title='API Doc',
+        default_version='v1', ),
+    public=True,
+    permission_classes=[permissions.AllowAny, ],
+)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("", include("develop.urls"))
+    path('users/', include('users.urls')),
+    path('bots/', include('bots.urls')),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

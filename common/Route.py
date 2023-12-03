@@ -35,3 +35,12 @@ class Route:
             **kwargs
         )
         self.set_response(response=response)
+
+    @staticmethod
+    def on_success(response: Response) -> Response:
+        return response
+
+    @staticmethod
+    def on_error(response: Response) -> Response:
+        return response
+

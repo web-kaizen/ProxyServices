@@ -73,6 +73,20 @@ TEMPLATES = [
     },
 ]
 
+# Redis
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
 ROOT_URLCONF = 'proxy.urls'
 
 WSGI_APPLICATION = 'proxy.wsgi.application'

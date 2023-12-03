@@ -16,7 +16,7 @@ class Route:
     def get_parameters(self) -> dict:
         return self._parameters
 
-    def set_response(self, response) -> None:
+    def set_response(self, response: Response) -> None:
         self._response = response
 
     def get_response(self) -> Response:

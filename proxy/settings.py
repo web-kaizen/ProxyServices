@@ -76,7 +76,7 @@ TEMPLATES = [
 # Redis
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
-CACHE_DEFAULT_TTL = os.getenv('CACHE_DEFAULT_TTL')
+CACHE_DEFAULT_TTL = int(os.getenv('CACHE_DEFAULT_TTL'))
 
 CACHES = {
     'default': {

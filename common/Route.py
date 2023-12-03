@@ -16,7 +16,12 @@ class Route:
     def get_parameters(self) -> dict:
         return self._parameters
 
-    def set_response(self, response: Response) -> None:
+    def set_response(self, response: Response, status: int = None) -> None:
+        if status is not None:
+            if 200 <= status < 300:
+                response = self.on_success(response)
+            if 400 <= status <= 500:
+                response = self.on_error(response)
         self._response = response
 
     def get_response(self) -> Response:

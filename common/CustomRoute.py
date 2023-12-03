@@ -1,8 +1,11 @@
+from rest_framework.response import Response
+
 from common.Route import Route
 
 
 class CustomRoute(Route):
-    def set_response(self, response, status=None):
+
+    def set_response(self, response: Response, status: str = None):
         if 'result' in response:
             super().set_response(response['result'], status)
             response['result'] = super().get_response()

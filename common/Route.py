@@ -43,4 +43,3 @@ class Route:
     @staticmethod
     def on_error(response: Response) -> Response:
         return response
-

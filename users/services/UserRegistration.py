@@ -1,11 +1,6 @@
-from overrides import override
-
-from common.Route import Route
+from common.CustomRoute import CustomRoute
 
 
-class UserRegistration(Route):
+class UserRegistration(CustomRoute):
     """User registration route"""
-
-    @override
-    def send(self, endpoint: str, method: str, **kwargs: dict) -> None:
-        super().send(endpoint=endpoint, method=method, kwargs=kwargs)
+    pass

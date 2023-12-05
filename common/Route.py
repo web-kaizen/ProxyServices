@@ -34,21 +34,18 @@ class Route:
     def get_response(self) -> Response:
         return self._response
 
-    def send(self, endpoint: str, method: str, **kwargs: dict) -> tuple:
-
+    def send(self, endpoint: str, method: str, **kwargs: dict) -> Response:
         response = requests.request(
             method=method,
             url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}',
-            data=self._parameters,
-            # headers=self.get_headers(),
+            json=self.get_parameters(),
+            headers=self.get_headers(),
             **kwargs
         )
-        self.set_response(response=response.json())
-        self.set_headers(headers=response.headers)
 
-        return self.get_response(), response.status_code,
-        # self.set_response(response=response)
-        # self.set_headers(response.headers)
+        self.set_response(response=response)
+
+        return self.get_response()
 
     @staticmethod
     def on_success(response: Response) -> Response:

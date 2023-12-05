@@ -19,13 +19,11 @@ class __BaseUserOperationView(APIView):
     def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
         route = self.route_class()
         route.set_headers(request.headers)
-        # route.send(endpoint=self.endpoint, method=request.method)
-        response, status_code = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
+        response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
         return Response(
-            data=response,
-            status=status_code
+            data=response.json(),
+            status=response.status_code
         )
-
 
     @swagger_auto_schema(request_body=UserLoginRegisterSerializer)
     def post(self, request: Request, *args: Any, **kwargs: dict) -> Response:
@@ -34,11 +32,10 @@ class __BaseUserOperationView(APIView):
             route = self.route_class()
             route.set_headers(request.headers)
             route.set_parameters(params=serializer.validated_data)
-            # route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
-            response, status_code = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
+            response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
             return Response(
-                data=response,
-                status=status_code
+                data=response.json(),
+                status=response.status_code,
             )
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

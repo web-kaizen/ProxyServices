@@ -8,7 +8,6 @@ class Logger:
     NEED_LOGGER: bool = settings.NEED_LOGGER
 
     def __init__(self, options: dict = None):
-
         self.__log_entry = Log()
         self.set_proxy_method(method=options.get("proxy_method"))
         self.set_core_method(method=options.get('core_method'))
@@ -29,9 +28,8 @@ class Logger:
         if key is not None and value is not None:
             setattr(self.__log_entry, key, value)
 
-
     def set_proxy_method(self, method: str) -> None:
-            self._set("proxy_method", method)
+        self._set("proxy_method", method)
 
     def set_core_method(self, method: str) -> None:
         self._set("core_method", method)
@@ -76,7 +74,6 @@ class Logger:
         if self.NEED_LOGGER:
             self.__log_entry.created_at = datetime.now().isoformat()
             self.__log_entry.save()
-
             self.clear_fields()
 
     def clear_fields(self):

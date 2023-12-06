@@ -24,7 +24,7 @@ class Logger:
         self.set_proxy_response_status_code(status_code=options.get('proxy_response_status_code'))
         self.set_core_response_status_code(status_code=options.get('core_response_status_code'))
 
-    def _set(self, key: str, value: Union[str, dict, int]):
+    def _set(self, key: str, value: Union[str, dict, int]) -> None:
         if key is not None and value is not None:
             setattr(self.__log_entry, key, value)
 
@@ -70,12 +70,12 @@ class Logger:
     def set_core_response_status_code(self, status_code: int) -> None:
         self._set("core_response_status_code", status_code)
 
-    def write(self):
+    def write(self) -> None:
         if self.NEED_LOGGER:
             self.__log_entry.created_at = datetime.now().isoformat()
             self.__log_entry.save()
             self.clear_fields()
 
-    def clear_fields(self):
+    def clear_fields(self) -> None:
         for field in self.__log_entry._meta.fields():
             setattr(self.__log_entry, field.attname, None)

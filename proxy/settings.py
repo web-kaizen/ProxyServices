@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 from dotenv import load_dotenv
 
@@ -39,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework_swagger',
     'drf_yasg',
     'rest_framework',
@@ -57,6 +60,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+ROOT_URLCONF = 'urls'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,10 +78,17 @@ TEMPLATES = [
     },
 ]
 
+""" WSGI SETTINGS DJANGO """
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+application = get_wsgi_application()
+
+WSGI_APPLICATION = 'core.settings.application'
 # Redis
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
-CACHE_DEFAULT_TTL = int(os.getenv('CACHE_DEFAULT_TTL'))
+# CACHE_DEFAULT_TTL = int(os.getenv('CACHE_DEFAULT_TTL'))
 
 CACHES = {
     'default': {
@@ -134,8 +146,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
 STATIC_URL = 'static/'
 
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:8080",
+#     "http://127.0.0.1:8000"
+# ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

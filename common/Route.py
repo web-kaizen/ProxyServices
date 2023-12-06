@@ -9,6 +9,13 @@ class Route:
     __APP_ID: str = settings.APP_ID
     _parameters: dict = {}
     _response: Response = None
+    _headers: dict = {}
+
+    def set_headers(self, headers: dict) -> None:
+        self._headers = headers
+
+    def get_headers(self) -> dict:
+        return self._headers
 
     def set_parameters(self, params: dict) -> None:
         self._parameters = params
@@ -27,14 +34,17 @@ class Route:
     def get_response(self) -> Response:
         return self._response
 
-    def send(self, endpoint: str, method: str, **kwargs: dict) -> None:
+    def send(self, endpoint: str, method: str, **kwargs: dict) -> Response:
         response = requests.request(
             method=method,
             url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}',
-            data=self._parameters,
+            json=self.get_parameters(),
+            headers=self.get_headers(),
             **kwargs
         )
-        self.set_response(response=response)
+        del response.headers["Connection"]
+        del response.headers["Keep-Alive"]
+        return response
 
     @staticmethod
     def on_success(response: Response) -> Response:

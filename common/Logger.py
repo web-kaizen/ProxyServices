@@ -34,7 +34,7 @@ class Logger:
             self._set("proxy_method", method)
 
     def set_core_method(self, method: str) -> None:
-        self._set("proxy_method", method)
+        self._set("core_method", method)
 
     def set_proxy_url(self, url: str) -> None:
         self._set("proxy_url", url)

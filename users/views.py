@@ -20,25 +20,24 @@ class __BaseUserOperationView(APIView):
         route = self.route_class()
         route.set_headers(request.headers)
         response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
+
         return Response(
             data=response.json(),
-            status=response.status_code
+            status=response.status_code,
+            headers=response.headers
         )
 
     @swagger_auto_schema(request_body=UserLoginRegisterSerializer)
     def post(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        serializer = UserLoginRegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            route = self.route_class()
-            route.set_headers(request.headers)
-            route.set_parameters(params=serializer.validated_data)
-            response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
-            return Response(
-                data=response.json(),
-                status=response.status_code,
-            )
-        else:
-            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        route = self.route_class()
+        route.set_headers(request.headers)
+        route.set_parameters(params=request.data)
+        response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
+        return Response(
+            data=response.json(),
+            status=response.status_code,
+            headers=response.headers
+        )
 
 
 class UserRegistrationView(__BaseUserOperationView):

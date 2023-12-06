@@ -42,10 +42,9 @@ class Route:
             headers=self.get_headers(),
             **kwargs
         )
-
-        self.set_response(response=response)
-
-        return self.get_response()
+        del response.headers["Connection"]
+        del response.headers["Keep-Alive"]
+        return response
 
     @staticmethod
     def on_success(response: Response) -> Response:

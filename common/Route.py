@@ -37,9 +37,9 @@ class Route:
     def send(self, endpoint: str, method: str, **kwargs: dict) -> Response:
         response = requests.request(
             method=method,
-            url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}',
+            url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}/',
             json=self.get_parameters(),
-            headers=self.get_headers(),
+            # headers=self.get_headers(),
             **kwargs
         )
         del response.headers["Connection"]

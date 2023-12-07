@@ -77,5 +77,5 @@ class Logger:
             self.clear_fields()
 
     def clear_fields(self) -> None:
-        for field in self.__log_entry._meta.fields():
+        for field in self.__log_entry._meta.fields:
             setattr(self.__log_entry, field.attname, None)

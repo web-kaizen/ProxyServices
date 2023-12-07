@@ -1,5 +1,5 @@
 from django.db import models
-from typing import Time
+
 
 class Log(models.Model):
 

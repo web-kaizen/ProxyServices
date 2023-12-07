@@ -1,8 +1,8 @@
-import os
 from datetime import datetime
 from django.conf import settings
 from .models import Log
 from typing import Union
+
 
 class Logger:
     NEED_LOGGER: bool = settings.NEED_LOGGER

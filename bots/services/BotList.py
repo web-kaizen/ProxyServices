@@ -1,5 +1,6 @@
-from common.CustomRoute import CustomRoute
 from requests import Response
+
+from common.CustomRoute import CustomRoute
 
 
 class BotList(CustomRoute):

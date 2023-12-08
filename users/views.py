@@ -7,7 +7,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.serializers import UserLoginRegisterSerializer
-from users.services import UserLogin, UserRegistration, UserLogout, EmailVerificationCheck, EmailVerificationResend, EmailVerificationVerify
+from users.services import (EmailVerificationCheck, EmailVerificationResend,
+                            EmailVerificationVerify, UserLogin, UserLogout,
+                            UserRegistration)
 
 
 class __BaseUserOperationView(APIView):

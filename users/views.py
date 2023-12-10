@@ -1,81 +1,71 @@
 from typing import Any
 
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from common.Route import Route
 from users.serializers import UserLoginRegisterSerializer
-from users.services import (EmailVerificationCheck, EmailVerificationResend,
-                            EmailVerificationVerify, UserLogin, UserLogout,
-                            UserRegistration)
 
 
 class __BaseUserOperationView(APIView):
     """Base class for users registration and login"""
 
-    route_class: Any = None
+    route_class: Any = Route
     endpoint: str = None
 
-    def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        route = self.route_class()
-        route.set_headers(request.headers)
-        response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
+    def _get_route(self, request: Request) -> Any:
+        route = self.route_class(request=request)
+        return route
 
-        return Response(
-            data=response.json(),
-            status=response.status_code,
-            headers=response.headers
-        )
+    def _send_request(self, route: Any, request: Request, params: dict = None) -> Response:
+        method = request.method
+        response = route.send(endpoint=self.endpoint, method=method, kwargs=params)
+        return Response(data=response.json(), status=response.status_code, headers=response.headers)
+
+    def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
+        route = self._get_route(request)
+        return self._send_request(route, request)
 
     @swagger_auto_schema(request_body=UserLoginRegisterSerializer)
     def post(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        route = self.route_class()
-        route.set_headers(request.headers)
+        route = self._get_route(request)
         route.set_parameters(params=request.data)
-        response = route.send(endpoint=self.endpoint, method=request.method, kwargs=None)
-        return Response(
-            data=response.json(),
-            status=response.status_code,
-            headers=response.headers
-        )
+        return self._send_request(route, request)
 
 
 class UserRegistrationView(__BaseUserOperationView):
     """Registers User in the third-party service"""
 
-    route_class = UserRegistration.UserRegistration
     endpoint = 'users'
 
 
 class LoginView(__BaseUserOperationView):
     """Logins User in the third-party service"""
 
-    route_class = UserLogin.UserLogin
     endpoint = 'users/login'
 
 
 class LogoutView(__BaseUserOperationView):
-    """Logins User in the third-party service"""
+    """Logouts User in the third-party service"""
 
-    route_class = UserLogout.UserLogout
     endpoint = 'users/logout'
 
 
 class EmailVerificationCheckView(__BaseUserOperationView):
+    """Checks Email Verification status"""
 
-    route_class = EmailVerificationCheck.EmailVerificationCheck
-    endpoint = "users/email-verification/check"
+    endpoint = 'users/email-verification/check'
 
 
 class EmailVerificationResendView(__BaseUserOperationView):
+    """Resends Email Verification"""
 
-    route_class = EmailVerificationResend.EmailVerificationResend
-    endpoint = "users/email-verification/resend"
+    endpoint = 'users/email-verification/resend'
 
 
 class EmailVerificationVerifyView(__BaseUserOperationView):
+    """Verifies Email"""
 
-    route_class = EmailVerificationVerify.EmailVerificationVerify
-    endpoint = "users/email-verification/verify"
+    endpoint = 'users/email-verification/verify'

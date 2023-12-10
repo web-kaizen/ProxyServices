@@ -7,25 +7,14 @@ from rest_framework.views import APIView
 from common.Route import Route
 
 
-class BotListView(APIView):
-    """Returns the list of existed bots"""
+class BotView(APIView):
+    """Returns the list of existing bots or details for a specific bot"""
 
     def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        response = Route(request=request).send(endpoint='bots')
-        return Response(
-            data=response.json(),
-            status=response.status_code,
-            headers=response.headers
-        )
+        bot_id = kwargs.get('bot_id')
+        if bot_id is None:
+            response = Route(request=request).send(endpoint='bots')
+        else:
+            response = Route(request=request).send(endpoint=f'bots/{bot_id}')
 
-
-class BotDetailsView(APIView):
-    """Returns details for a specific bot"""
-
-    def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        response = Route(request=request).send(endpoint=f'bots/{kwargs.get("bot_id")}')
-        return Response(
-            data=response.json(),
-            status=response.status_code,
-            headers=response.headers
-        )
+        return Response(data=response.json(), status=response.status_code, headers=response.headers)

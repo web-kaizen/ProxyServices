@@ -1,8 +1,8 @@
 from django.urls import path
 
-from dialogues.views import *
+from dialogues.views import DialoguesView
 
-# urlpatterns = [
-    # path('', BotListView.as_view(), name='bot-list'),
-    # path('<int:bot_id>/', BotDetailsView.as_view(), name='bot-details'),
-# ]
+urlpatterns = [
+    path('', DialoguesView.as_view(), name='dialogues-list'),
+    path('<int:dialogue_id>/', DialoguesView.as_view(), name='dialog-get-update-delete'),
+]

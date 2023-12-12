@@ -13,16 +13,13 @@ class Route:
         self._allowed_client_headers = ('Authorization', 'Content-Type',)
         self._headers_for_delete = ('Connection', 'Keep-Alive')
 
-    @property
     def request_method(self) -> str:
         return self.request.method
 
-    @property
-    def request_data(self) -> property:
+    def request_data(self) -> dict | list:
         return self.request.data
 
-    @property
-    def request_query_params(self) -> property:
+    def request_query_params(self) -> dict:
         return self.request.query_params
 
     # ToDo: debug headers, handle errors from Yadro

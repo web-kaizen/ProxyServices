@@ -22,7 +22,7 @@ class LogModel(models.Model):
     core_response_body = models.JSONField(null=True, blank=True)
     core_response_status_code = models.PositiveIntegerField(null=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Created at - {self.created_at} | Proxy method - {self.proxy_method} | Core method - {self.core_method}'
 
     class Meta:

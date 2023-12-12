@@ -9,7 +9,7 @@ from logger.models import LogModel
 class Logger:
     NEED_LOGGER: bool = settings.NEED_LOGGER
 
-    def __init__(self, options: dict = None):
+    def __init__(self, options: dict = None) -> None:
         self.__log_entry = LogModel()
         self.set_proxy_method(method=options.get('proxy_method'))
         self.set_core_method(method=options.get('core_method'))

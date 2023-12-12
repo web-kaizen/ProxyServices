@@ -1,12 +1,10 @@
 from typing import Any
 
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.Route import Route
-from users.serializers import UserLoginRegisterSerializer
 
 
 class __BaseUserOperationView(APIView):
@@ -28,7 +26,6 @@ class __BaseUserOperationView(APIView):
         route = self._get_route(request)
         return self._send_request(route, request)
 
-    @swagger_auto_schema(request_body=UserLoginRegisterSerializer)
     def post(self, request: Request, *args: Any, **kwargs: dict) -> Response:
         route = self._get_route(request)
         route.set_parameters(params=request.data)

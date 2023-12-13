@@ -11,7 +11,7 @@ class Route:
         self.request = request
         self.__APP_ID: str = settings.APP_ID
         self._allowed_client_headers = ('Authorization', 'Content-Type',)
-        self._headers_for_delete = ('Connection', 'Keep-Alive')
+        self._headers_for_delete = ('Connection', 'Keep-Alive',)
 
     def request_method(self) -> str:
         return self.request.method
@@ -25,10 +25,10 @@ class Route:
     # ToDo: debug headers, handle errors from Yadro
     def send(self, endpoint: str, **kwargs: dict) -> Response:
         prepared_request = requests.Request(
-            method=self.request_method,
+            method=self.request_method(),
             url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}/',
-            data=self.request_data,
-            params=self.request_query_params,
+            data=self.request_data(),
+            params=self.request_query_params(),
             **kwargs
         ).prepare()
 
@@ -38,8 +38,7 @@ class Route:
                 prepared_request.headers[k] = v
 
         response = requests.Session().send(request=prepared_request)
-        for k, v in response.headers.items():
-            if k in self._headers_for_delete:
-                response.headers.pop(k)
+        filtered_headers = {k: v for k, v in response.headers.items() if k not in self._headers_for_delete}
+        response.headers = filtered_headers
 
         return response

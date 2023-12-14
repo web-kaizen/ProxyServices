@@ -1,55 +1,44 @@
 import requests
 from django.conf import settings
 from requests import Response
+from rest_framework.request import Request
 
 
 class Route:
     """Base Route for communication with third-party services"""
 
-    __APP_ID: str = settings.APP_ID
-    _parameters: dict = {}
-    _response: Response = None
-    _headers: dict = {}
+    def __init__(self, request: Request) -> None:
+        self.request = request
+        self.__APP_ID: str = settings.APP_ID
+        self._allowed_client_headers = ('Authorization', 'Content-Type',)
+        self._headers_for_delete = ('Connection', 'Keep-Alive',)
 
-    def set_headers(self, headers: dict) -> None:
-        self._headers = headers
+    def request_method(self) -> str:
+        return self.request.method
 
-    def get_headers(self) -> dict:
-        return self._headers
+    def request_data(self) -> dict | list:
+        return self.request.data
 
-    def set_parameters(self, params: dict) -> None:
-        self._parameters = params
+    def request_query_params(self) -> dict:
+        return self.request.query_params
 
-    def get_parameters(self) -> dict:
-        return self._parameters
-
-    def set_response(self, response: Response, status: int = None) -> None:
-        if status is not None:
-            if 200 <= status < 300:
-                response = self.on_success(response)
-            if 400 <= status <= 500:
-                response = self.on_error(response)
-        self._response = response
-
-    def get_response(self) -> Response:
-        return self._response
-
-    def send(self, endpoint: str, method: str, **kwargs: dict) -> Response:
-        response = requests.request(
-            method=method,
+    # ToDo: debug headers, handle errors from Yadro
+    def send(self, endpoint: str, **kwargs: dict) -> Response:
+        prepared_request = requests.Request(
+            method=self.request_method(),
             url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}/',
-            json=self.get_parameters(),
-            # headers=self.get_headers(),
+            data=self.request_data(),
+            params=self.request_query_params(),
             **kwargs
-        )
-        del response.headers["Connection"]
-        del response.headers["Keep-Alive"]
-        return response
+        ).prepare()
 
-    @staticmethod
-    def on_success(response: Response) -> Response:
-        return response
+        headers = dict(self.request.headers)
+        for k, v in headers.items():
+            if k in self._allowed_client_headers:
+                prepared_request.headers[k] = v
 
-    @staticmethod
-    def on_error(response: Response) -> Response:
+        response = requests.Session().send(request=prepared_request)
+        filtered_headers = {k: v for k, v in response.headers.items() if k not in self._headers_for_delete}
+        response.headers = filtered_headers
+
         return response

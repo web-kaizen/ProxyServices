@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 from typing import Any
 from urllib.request import Request
 
@@ -15,25 +16,26 @@ class DialoguesView(APIView):
         offset -- A first parameter
         limit -- A second parameter
         """
-        dialogue_id = kwargs.get('dialogue_id')
-        endpoint = f'dialogues/{dialogue_id}' if dialogue_id else 'dialogues'
-        response = Route(request=request).send(endpoint=endpoint)
-        return Response(data=response.json(), status=response.status_code, headers=response.headers)
+        return self.__handle_request(request=request, **kwargs)
 
     def post(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        return self.__handle_request(request=request, kwargs=kwargs)
+        return self.__handle_request(request=request, **kwargs)
 
     def put(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        return self.__handle_request(request=request, kwargs=kwargs)
+        return self.__handle_request(request=request, **kwargs)
 
     def patch(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        return self.__handle_request(request=request, kwargs=kwargs)
+        return self.__handle_request(request=request, **kwargs)
 
     def delete(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        return self.__handle_request(request=request, kwargs=kwargs)
+        return self.__handle_request(request=request, **kwargs)
 
-    def __handle_request(self, request: Request, **kwargs: dict) -> Response:
+    @staticmethod
+    def __handle_request(request: Request, **kwargs: dict) -> Response:
         dialogue_id = kwargs.get('dialogue_id')
         endpoint = f'dialogues/{dialogue_id}' if dialogue_id else 'dialogues'
         response = Route(request=request).send(endpoint=endpoint)
-        return Response(data=response.json(), status=response.status_code, headers=response.headers)
+        try:
+            return Response(data=response.json(), status=response.status_code, headers=response.headers)
+        except JSONDecodeError:
+            return Response(data=response.text, status=response.status_code, headers=response.headers)

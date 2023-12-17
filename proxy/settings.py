@@ -86,6 +86,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'proxy.middleware.JsonResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'proxy.urls'
@@ -107,6 +108,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'proxy.wsgi.application'
+
+APPEND_SLASH = False
 
 INTERNAL_IPS = [
     '127.0.0.1',

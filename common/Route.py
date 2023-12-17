@@ -26,7 +26,7 @@ class Route:
         prepared_request = requests.Request(
             method=self.request_method(),
             url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}/',
-            data=self.request_data(),
+            json=self.request_data(),
             params=self.request_query_params(),
         ).prepare()
 

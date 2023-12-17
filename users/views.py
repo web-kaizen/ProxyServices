@@ -13,23 +13,15 @@ class __BaseUserOperationView(APIView):
     route_class: Any = Route
     endpoint: str = None
 
-    def _get_route(self, request: Request) -> Any:
-        route = self.route_class(request=request)
-        return route
-
-    def _send_request(self, route: Any, request: Request, params: dict = None) -> Response:
-        method = request.method
-        response = route.send(endpoint=self.endpoint, method=method, kwargs=params)
-        return Response(data=response.json(), status=response.status_code, headers=response.headers)
+    def _send_request(self, request: Request) -> Response:
+        response = Route(request=request).send(endpoint=self.endpoint)
+        return Response(data=response.text, status=response.status_code, headers=response.headers)
 
     def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        route = self._get_route(request)
-        return self._send_request(route, request)
+        return self._send_request(request=request)
 
     def post(self, request: Request, *args: Any, **kwargs: dict) -> Response:
-        route = self._get_route(request)
-        route.set_parameters(params=request.data)
-        return self._send_request(route, request)
+        return self._send_request(request=request)
 
 
 class UserRegistrationView(__BaseUserOperationView):

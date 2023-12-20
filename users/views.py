@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.Route import Route
+from proxy.decorators import handle_json_decode_error
 
 
 class __BaseUserOperationView(APIView):
@@ -13,9 +14,10 @@ class __BaseUserOperationView(APIView):
     route_class: Any = Route
     endpoint: str = None
 
+    @handle_json_decode_error
     def __send_request(self, request: Request) -> Response:
         response = Route(request=request).send(endpoint=self.endpoint)
-        return Response(data=response.json(), status=response.status_code, headers=response.headers)
+        return response
 
     def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:
         return self.__send_request(request=request)

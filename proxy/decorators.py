@@ -1,11 +1,12 @@
 from json.decoder import JSONDecodeError
-from rest_framework.response import Response
+from typing import Callable, Any
+
 from rest_framework import status
+from rest_framework.response import Response
 
 
-
-def handle_json_decode_error(request):
-    def _wrapped_view(*args, **kwargs):
+def handle_json_decode_error(request: Callable) -> Any:
+    def _wrapped_view(*args: Any, **kwargs: dict) -> Response:
         try:
             response = request(*args, **kwargs)
 

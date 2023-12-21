@@ -1,15 +1,13 @@
-from json.decoder import JSONDecodeError
 from typing import Callable, Any
 
-from rest_framework import status
+from requests.exceptions import JSONDecodeError
 from rest_framework.response import Response
 
 
 def handle_json_decode_error(request: Callable) -> Any:
     def _wrapped_view(*args: Any, **kwargs: dict) -> Response:
+        response = request(*args, **kwargs)
         try:
-            response = request(*args, **kwargs)
-
             if response.content:
                 data = response.json()
                 return Response(data=data, status=response.status_code, headers=response.headers)
@@ -17,6 +15,6 @@ def handle_json_decode_error(request: Callable) -> Any:
                 return Response(status=response.status_code, headers=response.headers)
 
         except JSONDecodeError:
-            return Response(data={'error': 'Invalid JSON response'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=response.text, status=response.status_code, headers=response.headers)
 
     return _wrapped_view

@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI/CD
 
 on:
   push:
@@ -27,6 +27,8 @@ jobs:
             LogLevel ERROR
             StrictHostKeyChecking no
           END
-      - name: Run deploy
+      - name: Run App
+        env:
+          .env
         run: |
           ssh target "cd **/ && ./manage.py migrate && ./manage.py runserver"

@@ -24,9 +24,9 @@ jobs:
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/github
-            LogLevel ERROR
+            LogLevel INFO
             StrictHostKeyChecking no
           END
       - name: Run App
         run: |
-          ssh target "cd /home/xbotapi2 && sudo systemctl restart gunicorn"
+          ssh target "cd /home/xbotapi2 && ls -la &&sudo systemctl restart gunicorn"

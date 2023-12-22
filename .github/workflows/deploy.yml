@@ -28,7 +28,5 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: Run App
-        with:
-          dotenv_path: .env
         run: |
           ssh target "cd /home/xbotapi2 && sudo systemctl restart gunicorn"

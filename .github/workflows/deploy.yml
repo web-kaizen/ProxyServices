@@ -12,17 +12,17 @@ jobs:
     steps:
       - name: Configure SSH
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          Host target
+          echo "Host target
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/github
             LogLevel INFO
-            StrictHostKeyChecking no > ~/.ssh/config
-          END
+            StrictHostKeyChecking no" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+
       - name: Run App
         run: |
           ssh target "cd /home/xbotapi2 && sudo systemctl restart gunicorn"

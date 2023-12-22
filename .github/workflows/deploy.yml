@@ -29,4 +29,4 @@ jobs:
           END
       - name: Run App
         run: |
-          ssh target "cd /home/xbotapi2 && ls -la &&sudo systemctl restart gunicorn"
+          ssh target "cd /home/xbotapi2"

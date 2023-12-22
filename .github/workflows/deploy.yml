@@ -28,7 +28,7 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: Run App
-        env:
-          .env
+        with:
+          dotenv_path: .env
         run: |
-          ssh target "cd **/ && ./manage.py migrate && ./manage.py runserver"
+          ssh target "cd /home/xbotapi2 && sudo systemctl restart gunicorn"

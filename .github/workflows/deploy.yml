@@ -17,6 +17,8 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
           mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/github
+          chmod 600 ~/.ssh/github
           echo "Host target
             HostName $SSH_HOST
             User $SSH_USER
@@ -27,4 +29,4 @@ jobs:
 
       - name: Run App
         run: |
-          ssh target "cd /home/xbotapi2 && sudo systemctl restart gunicorn"
+          ssh -i ~/.ssh/github target "cd /home/xbotapi2 && sudo systemctl restart gunicorn"

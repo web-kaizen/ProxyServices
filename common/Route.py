@@ -11,7 +11,7 @@ class Route:
         self.request = request
         self.__APP_ID: str = settings.APP_ID
         self._allowed_client_headers = ('Authorization', 'Content-Type',)
-        self._headers_for_delete = ('Connection', 'Keep-Alive',)
+        self._headers_for_delete = ('Connection', 'Keep-Alive', 'Server',)
 
     def request_method(self) -> str:
         return self.request.method

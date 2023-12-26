@@ -3,6 +3,8 @@ from django.conf import settings
 from requests import Response
 from rest_framework.request import Request
 
+from logger.services.Logger import Logger
+
 
 class Route:
     """Base Route for communication with third-party services"""
@@ -36,5 +38,7 @@ class Route:
         response = requests.Session().send(request=prepared_request)
         filtered_headers = {k: v for k, v in response.headers.items() if k not in self._headers_for_delete}
         response.headers = filtered_headers
+
+        Logger(response).write()
 
         return response

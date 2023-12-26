@@ -35,6 +35,9 @@ env = environ.Env(
     POSTGRES_PASSWORD=str,
     POSTGRES_DB_HOST=str,
     POSTGRES_DB_PORT=int,
+
+    # Logging
+    IS_NEED_LOGGER=bool,
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -180,3 +183,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Logging
+
+IS_NEED_LOGGER = env('IS_NEED_LOGGER')

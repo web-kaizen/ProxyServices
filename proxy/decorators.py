@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Any, Callable
 
 from requests.exceptions import JSONDecodeError
 from rest_framework.response import Response

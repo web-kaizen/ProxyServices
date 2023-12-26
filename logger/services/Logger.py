@@ -1,10 +1,7 @@
-import json
-
 from django.conf import settings
+from requests import Response
 
 from logger.models import LogModel
-
-from requests import Response
 
 
 class Logger:

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.Route import Route
+from logger.services.Logger import Logger
 from proxy.decorators import handle_json_decode_error
 
 
@@ -17,6 +18,8 @@ class __BaseUserOperationView(APIView):
     @handle_json_decode_error
     def __send_request(self, request: Request) -> Response:
         response = Route(request=request).send(endpoint=self.endpoint)
+        Logger().log_proxy_response_to_client(response=response)
+        Logger().save_to_db()
         return response
 
     def get(self, request: Request, *args: Any, **kwargs: dict) -> Response:

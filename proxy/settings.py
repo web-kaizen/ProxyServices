@@ -71,10 +71,13 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.postgres',
 
+    # 3-d party apps
     'rest_framework',
     'rest_framework_swagger',
     'drf_yasg',
+    'drf_standardized_errors',
 
+    # Local Apps
     'bots',
     'users',
     'dialogues',
@@ -90,6 +93,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'drf_standardized_errors.handler.exception_handler',
+}
+
+DRF_STANDARDIZED_ERRORS = {
+    'ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS': True,
+}
 
 ROOT_URLCONF = 'proxy.urls'
 
@@ -185,5 +196,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Logging
-
 IS_NEED_LOGGER = env('IS_NEED_LOGGER')
+
+SITE_ID = 1

@@ -14,12 +14,13 @@ class Route:
 
     def __init__(self, request: Request) -> None:
         self.request = request
+        Logger().log_client_request(request=self.request)
 
-    def send(self, endpoint: str) -> Response:
+    def send(self, endpoint: str) -> requests.Response:
         prepared_request = self._prepare_request(endpoint=endpoint)
         response = self._send_request(prepared_request=prepared_request)
         self._filter_response_headers(response=response)
-        self._log_response(response=response)
+        Logger().log_proxy_request_core_response(response=response)
         return response
 
     def _prepare_request(self, endpoint: str) -> requests.PreparedRequest:
@@ -46,7 +47,3 @@ class Route:
     def _filter_response_headers(self, response: Response) -> None:
         filtered_headers = {k: v for k, v in response.headers.items() if k not in self.__HEADERS_FOR_DELETE}
         response.headers = filtered_headers
-
-    @staticmethod
-    def _log_response(response: Response) -> None:
-        Logger(response).write()

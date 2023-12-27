@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.Route import Route
+from logger.services.Logger import Logger
 from proxy.decorators import handle_json_decode_error
 
 
@@ -36,4 +37,6 @@ class DialoguesView(APIView):
         dialogue_id = kwargs.get('dialogue_id')
         endpoint = f'dialogues/{dialogue_id}' if dialogue_id else 'dialogues'
         response = Route(request=request).send(endpoint=endpoint)
+        Logger().log_proxy_response_to_client(response=response)
+        Logger().save_to_db()
         return response

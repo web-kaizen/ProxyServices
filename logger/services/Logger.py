@@ -1,24 +1,41 @@
+import requests
+from rest_framework.request import Request
 from django.conf import settings
-from requests import Response
 
 from logger.models import LogModel
 
 
 class Logger:
+    
+    MODEL_FIELDS = {}
 
-    def __init__(self, response: Response) -> None:
-        self.response = response
+    def log_client_request(self, request: Request) -> None:
+        self.MODEL_FIELDS.update({
+            'client_request_method': request.method,
+            'client_request_url': request.get_full_path(),
+            'client_request_headers': dict(request.headers),
+            'client_request_body': request.body,
+        })
 
-    def write(self) -> None:
+    def log_proxy_request_core_response(self, response: requests.Response) -> None:
+        self.MODEL_FIELDS.update({
+            'proxy_request_method': response.request.method,
+            'proxy_request_url': response.request.url,
+            'proxy_request_headers': dict(response.request.headers),
+            'proxy_request_body': response.request.body.decode('utf-8'),
+            'core_response_headers': dict(response.headers),
+            'core_response_body': response.text,
+            'core_response_status_code': response.status_code,
+        })
+
+    def log_proxy_response_to_client(self, response: requests.Response) -> None:
+        self.MODEL_FIELDS.update({
+            'proxy_response_headers': dict(response.headers),
+            'proxy_response_body': response.content if response.content else '',
+            'proxy_response_status_code': response.status_code,
+        })
+
+    def save_to_db(self) -> None:
         if settings.IS_NEED_LOGGER:
-            log = LogModel(
-                proxy_method=self.response.request.method,
-                proxy_url=self.response.request.url,
-                proxy_request_headers=self.response.request.headers,
-                proxy_request_body=self.response.request.body.decode('utf-8'),
-                core_url=self.response.url,
-                core_response_headers=self.response.headers,
-                core_response_body=self.response.text,
-                core_response_status_code=self.response.status_code,
-            )
+            log = LogModel(**self.MODEL_FIELDS)
             log.save()

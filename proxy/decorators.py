@@ -13,7 +13,6 @@ def handle_json_decode_error(request: Callable) -> Any:
                 return Response(data=data, status=response.status_code, headers=response.headers)
             else:
                 return Response(status=response.status_code, headers=response.headers)
-
         except JSONDecodeError:
             return Response(data=response.text, status=response.status_code, headers=response.headers)
 

@@ -3,38 +3,47 @@ from django.conf import settings
 from requests import Response
 from rest_framework.request import Request
 
+from logger.services.Logger import Logger
+
 
 class Route:
     """Base Route for communication with third-party services"""
 
+    __ALLOWED_CLIENT_HEADERS = ('Authorization', 'Content-Type',)
+    __HEADERS_FOR_DELETE = ('Connection', 'Keep-Alive',)
+
     def __init__(self, request: Request) -> None:
         self.request = request
-        self.__APP_ID: str = settings.APP_ID
-        self._allowed_client_headers = ('Authorization', 'Content-Type',)
-        self._headers_for_delete = ('Connection', 'Keep-Alive', 'Server',)
+        Logger().log_client_request(request=self.request)
 
-    def request_method(self) -> str:
-        return self.request.method
+    def send(self, endpoint: str) -> requests.Response:
+        prepared_request = self._prepare_request(endpoint=endpoint)
+        response = self._send_request(prepared_request=prepared_request)
+        self._filter_response_headers(response=response)
+        Logger().log_proxy_request_core_response(response=response)
+        return response
 
-    def request_data(self) -> dict | list:
-        return self.request.data
-
-    def request_query_params(self) -> dict:
-        return self.request.query_params
-
-    def send(self, endpoint: str) -> Response:
+    def _prepare_request(self, endpoint: str) -> requests.PreparedRequest:
+        url = f'{settings.THIRD_PARTY_APP_URL}/{settings.APP_ID}/{endpoint}/'
         prepared_request = requests.Request(
-            method=self.request_method(),
-            url=f'{settings.THIRD_PARTY_APP_URL}/{self.__APP_ID}/{endpoint}/',
-            json=self.request_data(),
-            params=self.request_query_params(),
+            method=self.request.method,
+            url=url,
+            json=self.request.data,
+            params=self.request.query_params,
         ).prepare()
 
-        headers = dict(self.request.headers)
-        prepared_request.headers = {k: v for k, v in headers.items() if k in self._allowed_client_headers}
+        self._filter_request_headers(headers=prepared_request.headers)
 
-        response = requests.Session().send(request=prepared_request)
-        filtered_headers = {k: v for k, v in response.headers.items() if k not in self._headers_for_delete}
+        return prepared_request
+
+    @staticmethod
+    def _send_request(prepared_request: requests.PreparedRequest) -> requests.Response:
+        session = requests.Session()
+        return session.send(request=prepared_request)
+
+    def _filter_request_headers(self, headers: dict) -> None:
+        self.request.headers = {k: v for k, v in headers.items() if k in self.__ALLOWED_CLIENT_HEADERS}
+
+    def _filter_response_headers(self, response: Response) -> None:
+        filtered_headers = {k: v for k, v in response.headers.items() if k not in self.__HEADERS_FOR_DELETE}
         response.headers = filtered_headers
-
-        return response

@@ -18,6 +18,8 @@ from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from django.contrib import admin
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -28,6 +30,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('api/v0/users/', include('users.urls')),
     path('api/v0/bots/', include('bots.urls')),
     path('api/v0/dialogues/', include('dialogues.urls')),

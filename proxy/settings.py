@@ -35,6 +35,9 @@ env = environ.Env(
     POSTGRES_PASSWORD=str,
     POSTGRES_DB_HOST=str,
     POSTGRES_DB_PORT=int,
+
+    # Logging
+    IS_NEED_LOGGER=bool,
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -68,10 +71,13 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.postgres',
 
+    # 3-d party apps
     'rest_framework',
     'rest_framework_swagger',
     'drf_yasg',
+    'drf_standardized_errors',
 
+    # Local Apps
     'bots',
     'users',
     'dialogues',
@@ -87,6 +93,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'drf_standardized_errors.handler.exception_handler',
+}
+
+DRF_STANDARDIZED_ERRORS = {
+    'ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS': True,
+}
 
 ROOT_URLCONF = 'proxy.urls'
 
@@ -180,3 +194,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Logging
+IS_NEED_LOGGER = env('IS_NEED_LOGGER')
+
+SITE_ID = 1

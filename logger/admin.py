@@ -5,4 +5,4 @@ from logger.models import LogModel
 
 @admin.register(LogModel)
 class LogModelAdmin(admin.ModelAdmin):
-    pass
+    ordering = ('id', 'created_at', 'proxy_method',)

@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_yasg',
     'drf_standardized_errors',
+    'corsheaders',
 
     # Local Apps
     'bots',
@@ -85,6 +86,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -199,3 +201,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 IS_NEED_LOGGER = env('IS_NEED_LOGGER')
 
 SITE_ID = 1
+
+# CORS
+CORS_ALLOW_ALL_ORIGINS = True

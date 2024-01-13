@@ -11,18 +11,18 @@ class Logger:
 
     def log_client_request(self, request: Request) -> None:
         self.MODEL_FIELDS.update({
-            'client_request_method': request.method,
-            'client_request_url': request.get_full_path(),
-            'client_request_headers': dict(request.headers),
-            'client_request_body': request.body,
+            'proxy_method': request.method,
+            'proxy_url': request.get_full_path(),
+            'proxy_request_headers': dict(request.headers),
+            'proxy_request_body': request.body,
         })
 
     def log_proxy_request_core_response(self, response: requests.Response) -> None:
         self.MODEL_FIELDS.update({
-            'proxy_request_method': response.request.method,
-            'proxy_request_url': response.request.url,
-            'proxy_request_headers': dict(response.request.headers),
-            'proxy_request_body': response.request.body.decode('utf-8'),
+            'core_method': response.request.method,
+            'core_url': response.request.url,
+            'core_request_headers': dict(response.request.headers),
+            'core_request_body': response.request.body.decode('utf-8'),
             'core_response_headers': dict(response.headers),
             'core_response_body': response.text,
             'core_response_status_code': response.status_code,

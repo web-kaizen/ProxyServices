@@ -1,8 +1,9 @@
 import json
 
 import requests
-from common.Route import Route
 from rest_framework.request import Request
+
+from common.Route import Route
 
 
 class BotTemplate(Route):

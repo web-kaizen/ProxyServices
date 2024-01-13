@@ -15,19 +15,22 @@ class BotTemplate(Route):
         response = self.__add_additional_fields_to_response(response=yadro_response)
         return response
 
-    @staticmethod
-    def __add_additional_fields_to_response(response: requests.Response) -> requests.Response:
-        fields_to_add = {
-            'bot_name': 'ChatGPT',
-            'model_name': 'Gpt-3.5',
-            'mode_name': '4k context'
-        }
+    def __add_additional_fields_to_response(self, response: requests.Response) -> requests.Response:
         content = {'result': []}
         for obj in response.json()['result']:
-            obj.update(fields_to_add)
+            obj.update(self.__parse_name_field(obj['name']))
             content['result'].append(obj)
 
         response._content = json.dumps(content).encode('utf-8')
-        response.headers.pop('Content-Length')
 
         return response
+
+    @staticmethod
+    def __parse_name_field(name_field: str) -> dict:
+        split_values = name_field.split('-')
+        fields_to_add = {
+            'bot_name': 'ChatGPT',
+            'model_name': f'{split_values[0] + split_values[1]}'.title(),
+            'mode_name': f'{split_values[2].capitalize()} context'
+        }
+        return fields_to_add

@@ -10,7 +10,7 @@ class Route:
     """Base Route for communication with third-party services"""
 
     __ALLOWED_CLIENT_HEADERS = ('Authorization', 'Content-Type',)
-    __HEADERS_FOR_DELETE = ('Connection', 'Keep-Alive',)
+    __HEADERS_FOR_DELETE = ('Connection', 'Keep-Alive', 'Content-Length',)
 
     def __init__(self, request: Request) -> None:
         self.request = request

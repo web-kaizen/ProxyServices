@@ -30,9 +30,8 @@ class Route:
             url=url,
             json=self.request.data,
             params=self.request.query_params,
+            headers=self.__filter_request_headers(self.request.headers)
         ).prepare()
-
-        self._filter_request_headers(headers=prepared_request.headers)
 
         return prepared_request
 
@@ -41,8 +40,8 @@ class Route:
         session = requests.Session()
         return session.send(request=prepared_request)
 
-    def _filter_request_headers(self, headers: dict) -> None:
-        self.request.headers = {k: v for k, v in headers.items() if k in self.__ALLOWED_CLIENT_HEADERS}
+    def __filter_request_headers(self, headers: dict) -> dict:
+        return {k: v for k, v in headers.items() if k in self.__ALLOWED_CLIENT_HEADERS}
 
     def _filter_response_headers(self, response: Response) -> None:
         filtered_headers = {k: v for k, v in response.headers.items() if k not in self.__HEADERS_FOR_DELETE}
